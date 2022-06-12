@@ -1,11 +1,23 @@
-// // const argv = require('yargs').argv
 const contacts = require('./contacts')
+const { Command } = require('commander')
+
+const program = new Command()
+program
+  .option('-a, --action <type>', 'choose action')
+  .option('-i, --id <type>', 'user id')
+  .option('-n, --name <type>', 'user name')
+  .option('-e, --email <type>', 'user email')
+  .option('-p, --phone <type>', 'user phone')
+
+program.parse()
+
+const options = program.opts()
 
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
     case 'list':
       const result = await contacts.listContacts()
-      console.log(result)
+      console.table(result)
       break
 
     case 'get':
@@ -18,9 +30,10 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
       console.log(newContact)
       break
 
-    // case 'remove':
-    //   // ... id
-    //   break
+    case 'remove':
+      const removeContact = await contacts.removeContact(id)
+      console.log(removeContact)
+      break
 
     default:
       console.warn('\x1B[31m Unknown action type!')
@@ -28,11 +41,4 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
   }
 }
 
-// invokeAction({ action: 'list' })
-// invokeAction({ action: 'get', id: '5' })
-invokeAction({
-  action: 'add',
-  name: 'Denis Fedash',
-  email: '0501054104d@gmail.com',
-  phone: '(050) 105-4104',
-})
+invokeAction(options)
