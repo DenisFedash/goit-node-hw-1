@@ -1,50 +1,50 @@
-const fs = require('fs/promises')
-const path = require('path')
-const nid = require('nid')
+const fs = require('fs/promises');
+const path = require('path');
+const nid = require('nid');
 
-const contactsPath = path.join(__dirname, 'db/contacts.json')
+const contactsPath = path.join(__dirname, 'db/contacts.json');
 
 const listContacts = async () => {
-  const data = await fs.readFile(contactsPath)
-  return JSON.parse(data)
-}
+  const data = await fs.readFile(contactsPath);
+  return JSON.parse(data);
+};
 
-const getContactById = async (id) => {
-  const contacts = await listContacts()
-  const result = contacts.find((contact) => contact.id === id)
+const getContactById = async id => {
+  const contacts = await listContacts();
+  const result = contacts.find(contact => contact.id === id);
   if (!result) {
-    return null
+    return null;
   }
-  return result
-}
+  return result;
+};
 
 const addContact = async (name, email, phone) => {
-  const contacts = await listContacts()
+  const contacts = await listContacts();
   const newContact = {
     id: nid(),
     name,
     email,
     phone,
-  }
-  contacts.push(newContact)
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
-  return newContact
-}
+  };
+  contacts.push(newContact);
+  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+  return newContact;
+};
 
-const removeContact = async (id) => {
-  const contacts = await listContacts()
-  const idx = contacts.findIndex((contact) => contact.id === id)
+const removeContact = async id => {
+  const contacts = await listContacts();
+  const idx = contacts.findIndex(contact => contact.id === id);
   if (idx === -1) {
-    return null
+    return null;
   }
-  const remove = contacts.splice(idx, 1)
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
-  return remove
-}
+  const remove = contacts.splice(idx, 1);
+  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+  return remove;
+};
 
 module.exports = {
   listContacts,
   getContactById,
   addContact,
   removeContact,
-}
+};
